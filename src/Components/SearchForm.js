@@ -7,19 +7,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { searchTracks } from '../reducer'
 
 export default function SearchForm() {
-  
   const dispatch = useDispatch()
-
   const access_token = useSelector(state => state.app.token_info.access_token)
-
   const [inputSong, setInputSong] = useState('') 
   
   function handleInputSongChange(event){
       setInputSong(event.target.value)
+      dispatch(searchTracks(event.target.value,1))
   }
 
   function handleSubmit(event){
-      dispatch(searchTracks(access_token,inputSong,1))
+      dispatch(searchTracks(inputSong,1))
       setInputSong('')
   }
 

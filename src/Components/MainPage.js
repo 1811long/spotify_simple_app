@@ -4,6 +4,7 @@ import ListTracks from './ListTracks'
 import APIController from '../APIController'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import Player from './Player'
 
 export default function MainPage({code}) {
 
@@ -33,14 +34,15 @@ export default function MainPage({code}) {
           expires_in: response.expires_in
         }})
       })
-    },3000)
+    },(expires_in-60)*1000)
   },[access_token,expires_in])
 
   return (
     <div>
-        <h1>Main page</h1>
+        <h1>Search a song</h1>
         <SearchForm />
         <ListTracks />
+        <Player />
     </div>
   )
 }

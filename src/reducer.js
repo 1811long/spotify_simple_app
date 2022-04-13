@@ -2,18 +2,40 @@ import { combineReducers } from "redux"
 import APIController from "./APIController";
 
 const initialState = {
+    searchedTrack:'',
+    nowPlayingTrack: '',
+    currentPage: 1,
     token_info:{
         access_token: '',
         refresh_token: '',
         expires_in: null
     },
-    listTracks:[]
+    tracks_info:{
+        listTracksCurrentPage:[],
+        totalTracksCount:0,
+        urlNextPage:'',
+        urlPreviousPage: ''
+    }
 }
 
-export function searchTracks(token,nameTrack,pageNumber){
-    return async function getTracks(dispatch,state){
-        const listTracks = await APIController().getTracks(token,nameTrack,pageNumber)
-        dispatch({type:"GET_TRACKS",payload:listTracks})
+export function searchTracks(nameTrack,pageNumber){
+    return async function searchTracksThunk(dispatch,getState){
+        const access_token = getState().app.token_info.access_token
+        APIController().getTracks(access_token,nameTrack,pageNumber)
+            .then((tracks_info) => {
+                dispatch({type:"GET_TRACKS",payload:{searchedTrack: nameTrack, tracks_info, pageNumber: 1}})
+            })
+    }
+}
+
+export function changePageListTracks(pageNumber){
+    return async function changePageListTracksThunk(dispatch, getState){
+        const access_token = getState().app.token_info.access_token
+        const nameTrack = getState().app.searchedTrack
+        APIController().getTracks(access_token,nameTrack,pageNumber)
+            .then((tracks_info) => {
+                dispatch({type:"GET_TRACKS",payload:{searchedTrack: nameTrack, tracks_info, pageNumber}})
+        })
     }
 }
 
@@ -36,7 +58,14 @@ function appReducer(state = initialState, action) {
         case "GET_TRACKS":
             return {
                 ...state,
-                listTracks: action.payload
+                currentPage: action.payload.pageNumber,
+                searchedTrack:  action.payload.searchedTrack,
+                tracks_info: action.payload.tracks_info
+            }
+        case "PLAY_TRACK":
+            return{
+                ...state,
+                nowPlayingTrack: action.payload
             }
         default : return state
     }        

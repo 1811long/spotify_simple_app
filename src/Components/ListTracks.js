@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import TrackItem from './TrackItem'
 import List from '@mui/material/List';
 import PaginationListTrack from './PaginationListTrack';
-
+import Player from './Player';
 function CurrentPageTracks({currentListTracks}){
   return (
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -15,14 +15,12 @@ function CurrentPageTracks({currentListTracks}){
 }
 
 export default function ListTracks() {
-
-  const currentListTracks = useSelector(state => state.app.listTracks)
-  const access_token = useSelector(state => state.app.token_info.access_token)
-
+  const currentListTracks = useSelector(state => state.app.tracks_info.listTracksCurrentPage)
   return (
     <>
       <CurrentPageTracks currentListTracks={currentListTracks}/>
-      <PaginationListTrack pageCount={10}/>
+      <hr></hr>
+      {currentListTracks.length ? <PaginationListTrack /> : ''}
     </>
   )
 }

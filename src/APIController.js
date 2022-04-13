@@ -50,8 +50,12 @@ export default function APIController() {
             }
         )
         const data = await response.json()
-        console.log(data)
-        return data.tracks.items
+        return {
+            listTracksCurrentPage: data.tracks.items,
+            totalTracksCount: data.tracks.total,
+            urlNextPage: data.tracks.next,
+            urlPreviousPage: data.tracks.previous,
+        }
     }
 
     return{

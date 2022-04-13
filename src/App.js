@@ -11,7 +11,12 @@ function App() {
 
   return (
     <div>
-      <Container maxWidth="sm">
+      <Container 
+        maxWidth="sm"
+        sx={{
+          marginTop:"100px",
+        }}
+      >
         {!code ? <Login /> : <MainPage code={code}/>}
       </Container>
     </div>
