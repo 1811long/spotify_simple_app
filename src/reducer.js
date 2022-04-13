@@ -1,7 +1,14 @@
 import { combineReducers } from "redux"
 import APIController from "./APIController";
 
-const initialState = []
+const initialState = {
+    token_info:{
+        access_token: '',
+        refresh_token: '',
+        expires_in: null
+    },
+    listTracks:[]
+}
 
 export function searchTracks(token,nameTrack,pageNumber){
     return async function getTracks(dispatch,state){
@@ -10,14 +17,31 @@ export function searchTracks(token,nameTrack,pageNumber){
     }
 }
 
-function listTracksReducer(state = initialState, action) {
+function appReducer(state = initialState, action) {
     switch (action.type){
+        case "GET_TOKEN":
+            return{
+                ...state,
+                token_info: action.payload
+            }
+        case "REFRESH_TOKEN":
+            return {
+                ...state,
+                token_info:{
+                    ...state.token_info,
+                    access_token: action.payload.access_token,
+                    expires_in: action.payload.expires_in
+                }
+            }
         case "GET_TRACKS":
-        return action.payload;
+            return {
+                ...state,
+                listTracks: action.payload
+            }
         default : return state
     }        
 }
 
 export default combineReducers({
-    listTracks: listTracksReducer
+    app: appReducer
 })

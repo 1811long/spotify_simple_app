@@ -5,6 +5,7 @@ const client_secret = "ab7fce60834945b4a26955c97bfdb2ac"
 const redirect_uri = "http://localhost:3000"
 
 export default function APIController() {
+    
     async function _getToken(code){
         
         const url = "https://accounts.spotify.com/api/token?"+"grant_type=authorization_code&code="+code+"&redirect_uri="+redirect_uri
@@ -37,11 +38,8 @@ export default function APIController() {
     }
 
     async function _getTracks(token, nameTrack, pageNumber){
-        
         const indexStart = (pageNumber - 1) * 10
-
         const url = "https://api.spotify.com/v1/search?q="+encodeURIComponent("track:"+nameTrack)+"&type="+encodeURIComponent("track")+"&limit=10&offset="+indexStart
-       
         const response = await fetch(url,
             {
                 method: 'GET',
@@ -51,9 +49,8 @@ export default function APIController() {
                 }
             }
         )
-
         const data = await response.json()
-
+        console.log(data)
         return data.tracks.items
     }
 

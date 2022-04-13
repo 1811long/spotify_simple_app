@@ -2,16 +2,15 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
 import { searchTracks } from '../reducer'
 
-
-export default function SearchForm({token}) {
+export default function SearchForm() {
   
   const dispatch = useDispatch()
+
+  const access_token = useSelector(state => state.app.token_info.access_token)
 
   const [inputSong, setInputSong] = useState('') 
   
@@ -20,7 +19,7 @@ export default function SearchForm({token}) {
   }
 
   function handleSubmit(event){
-      dispatch(searchTracks(token,inputSong,1))
+      dispatch(searchTracks(access_token,inputSong,1))
       setInputSong('')
   }
 
