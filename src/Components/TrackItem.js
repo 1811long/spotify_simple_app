@@ -11,7 +11,10 @@ export default function TrackItem({ track }) {
     <ListItemButton
       style={{ width: '550px' }}
       onClick={() => {
-        if (!track.preview_url) alert("this track dont have any preview")
+        if (!track.preview_url) {
+          alert("this track dont have any preview")
+          return
+        }
         dispatch({type:"PLAY_TRACK", payload: track.preview_url})
       }}
     >

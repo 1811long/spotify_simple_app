@@ -4,13 +4,23 @@ import TrackItem from './TrackItem'
 import List from '@mui/material/List';
 import PaginationListTrack from './PaginationListTrack';
 import Player from './Player';
+import Loader from './Loader';
+
 function CurrentPageTracks({currentListTracks}){
+  const showLoader = useSelector(state => state.app.showLoader)
+
   return (
-    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      {currentListTracks.map((track) => (
-          <TrackItem key={track.id} track={track}/>
-      ))}
-    </List>
+    <div style={{textAlign:'center'}}>
+      {!showLoader ?
+      <List sx={{ width: '100%', bgcolor: 'background.paper'}}>
+        {currentListTracks.filter((track) => track != null).map((track) => (
+            <TrackItem key={track.id} track={track}/>
+        ))}
+      </List>
+      : 
+          <Loader />
+      }
+    </div>
   )
 }
 

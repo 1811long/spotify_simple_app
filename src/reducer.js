@@ -5,6 +5,7 @@ const initialState = {
     searchedTrack:'',
     nowPlayingTrack: '',
     currentPage: 1,
+    showLoader: false,
     token_info:{
         access_token: '',
         refresh_token: '',
@@ -20,7 +21,7 @@ const initialState = {
 
 export function searchTracks(nameTrack,pageNumber){
     return async function searchTracksThunk(dispatch,getState){
-        const access_token = getState().app.token_info.access_token
+        const access_token = await getState().app.token_info.access_token
         APIController().getTracks(access_token,nameTrack,pageNumber)
             .then((tracks_info) => {
                 dispatch({type:"GET_TRACKS",payload:{searchedTrack: nameTrack, tracks_info, pageNumber: 1}})
@@ -30,11 +31,12 @@ export function searchTracks(nameTrack,pageNumber){
 
 export function changePageListTracks(pageNumber){
     return async function changePageListTracksThunk(dispatch, getState){
-        const access_token = getState().app.token_info.access_token
-        const nameTrack = getState().app.searchedTrack
+        const access_token = await getState().app.token_info.access_token
+        const nameTrack = await getState().app.searchedTrack
+        await dispatch({type:"SHOW_LOADER"})
         APIController().getTracks(access_token,nameTrack,pageNumber)
-            .then((tracks_info) => {
-                dispatch({type:"GET_TRACKS",payload:{searchedTrack: nameTrack, tracks_info, pageNumber}})
+        .then((tracks_info) => {
+            dispatch({type:"GET_TRACKS",payload:{searchedTrack: nameTrack, tracks_info, pageNumber}})
         })
     }
 }
@@ -60,12 +62,18 @@ function appReducer(state = initialState, action) {
                 ...state,
                 currentPage: action.payload.pageNumber,
                 searchedTrack:  action.payload.searchedTrack,
+                showLoader:false,
                 tracks_info: action.payload.tracks_info
             }
         case "PLAY_TRACK":
             return{
                 ...state,
                 nowPlayingTrack: action.payload
+            }
+        case "SHOW_LOADER":
+            return{
+                ...state,
+                showLoader:true
             }
         default : return state
     }        
